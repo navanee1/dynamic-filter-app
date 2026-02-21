@@ -7,7 +7,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TableSortLabel,
   Box,
   Typography,
   Stack,

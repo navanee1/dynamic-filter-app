@@ -16,7 +16,6 @@ import { Plus, RotateCcw, AlertCircle } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import type { FilterCondition, FilterState } from '../types';
 import { FilterConditionComponent } from './FilterCondition';
-import { fieldDefinitions } from '../data/fieldDefinitions';
 import { FilterValidator } from '../utils/filterValidator';
 
 interface FilterBuilderProps {
@@ -211,23 +210,3 @@ export const FilterBuilder: React.FC<FilterBuilderProps> = ({
     </Paper>
   );
 };
-
-function getDefaultValue(fieldType: string): any {
-  switch (fieldType) {
-    case 'text':
-      return '';
-    case 'number':
-    case 'amount':
-      return '';
-    case 'date':
-      return '';
-    case 'boolean':
-      return true;
-    case 'singleSelect':
-      return '';
-    case 'multiSelect':
-      return [];
-    default:
-      return '';
-  }
-}
