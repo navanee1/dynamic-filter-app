@@ -36,37 +36,6 @@ npm run build
 npm run preview  # test the production build locally
 ```
 
-## How the project is organized
-
-```
-src/
-├── components/
-│   ├── DataTable.tsx              # table that shows results + sorting
-│   ├── FilterBuilder.tsx           # the main filter UI
-│   ├── FilterCondition.tsx         # individual filter row
-│   ├── FilterInputs.tsx            # input components for different types
-│
-├── utils/
-│   ├── filterEngine.ts             # does the actual filtering
-│   ├── filterValidator.ts          # validates filter conditions
-│   ├── exportUtil.ts               # handles CSV/JSON exports
-│   ├── debounce.ts                 # debounce hook
-│
-├── api/
-│   ├── mockApi.ts                  # mocks the API
-│   ├── employeeApi.ts              # API service
-│
-├── data/
-│   ├── employees.ts                # 55 employee records
-│   ├── fieldDefinitions.ts         # field config and operators
-│
-├── types/
-│   └── index.ts                    # TypeScript types
-│
-├── App.tsx                         # main app component
-└── main.tsx                        # entry point
-```
-
 ## How to use it
 
 ### Basic FilterBuilder usage
@@ -418,19 +387,19 @@ regex.test('test string');
 
 ## What's done
 
-- ✅ Filter builder that actually works
-- ✅ All 8 data types
-- ✅ AND/OR logic
-- ✅ Real-time validation
-- ✅ 55 sample employees
-- ✅ Sortable table
-- ✅ Material-UI + Lucide icons
-- ✅ TypeScript everywhere
-- ✨ Filter persistence (localStorage)
-- ✨ CSV/JSON export
-- ✨ Regex matching
-- ✨ Accessibility (ARIA, tooltips)
-- ✨ Debounced updates
+- Filter builder that actually works
+- All 8 data types
+- AND/OR logic
+- Real-time validation
+- 55 sample employees
+- Sortable table
+- Material-UI + Lucide icons
+- TypeScript everywhere
+- Filter persistence (localStorage)
+- CSV/JSON export
+- Regex matching
+- Accessibility (ARIA, tooltips)
+- Debounced updates
 
 ---
 
