@@ -10,9 +10,12 @@ import {
   Box,
   Typography,
   Stack,
-  Chip
+  Chip,
+  Button,
+  Select,
+  MenuItem
 } from '@mui/material';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Employee } from '../types';
 import { getNestedValue } from '../data/fieldDefinitions';
 
@@ -44,6 +47,10 @@ interface SortState {
 export const DataTable: React.FC<DataTableProps> = ({ data, totalCount, filteredCount }) => {
   // Track which column is currently sorted and in which direction (asc/desc)
   const [sortState, setSortState] = useState<SortState>({ field: null, order: 'asc' });
+  
+  // Pagination state - track current page and items per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Define which columns to show in the table and their properties
   const columns = [
@@ -96,6 +103,19 @@ export const DataTable: React.FC<DataTableProps> = ({ data, totalCount, filtered
       order: prev.field === field && prev.order === 'asc' ? 'desc' : 'asc'
     }));
   };
+
+  // Calculate paginated data from sorted data
+  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+  const paginatedData = useMemo(() => {
+    const startIdx = (currentPage - 1) * itemsPerPage;
+    const endIdx = startIdx + itemsPerPage;
+    return sortedData.slice(startIdx, endIdx);
+  }, [sortedData, currentPage, itemsPerPage]);
+
+  // Reset to page 1 when filter changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [sortedData.length]);
 
   // Format values for display in the table. Different field types need different formatting.
   // For example, we show currency with $ sign, dates in readable format, booleans as status chips, etc.
@@ -154,33 +174,35 @@ export const DataTable: React.FC<DataTableProps> = ({ data, totalCount, filtered
   return (
     <Paper elevation={0} sx={{ backgroundColor: '#fff' }}>
       <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0' }}>
-        <Stack direction="row" spacing={2}>
-          <Box>
-            <Typography variant="caption" color="textSecondary">
-              Total Records
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {totalCount}
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant="caption" color="textSecondary">
-              Filtered Results
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
-              {filteredCount}
-            </Typography>
-          </Box>
-          {filteredCount !== totalCount && (
+        <Stack direction="row" spacing={2} sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <Stack direction="row" spacing={2}>
             <Box>
               <Typography variant="caption" color="textSecondary">
-                Match Rate
+                Total Records
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                {((filteredCount / totalCount) * 100).toFixed(1)}%
+                {totalCount}
               </Typography>
             </Box>
-          )}
+            <Box>
+              <Typography variant="caption" color="textSecondary">
+                Filtered Results
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+                {filteredCount}
+              </Typography>
+            </Box>
+            {filteredCount !== totalCount && (
+              <Box>
+                <Typography variant="caption" color="textSecondary">
+                  Match Rate
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  {((filteredCount / totalCount) * 100).toFixed(1)}%
+                </Typography>
+              </Box>
+            )}
+          </Stack>
         </Stack>
       </Box>
 
@@ -233,7 +255,7 @@ export const DataTable: React.FC<DataTableProps> = ({ data, totalCount, filtered
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedData.map((row, idx) => (
+              {paginatedData.map((row, idx) => (
                 <TableRow
                   key={row.id}
                   sx={{
@@ -256,6 +278,65 @@ export const DataTable: React.FC<DataTableProps> = ({ data, totalCount, filtered
           </Table>
         )}
       </TableContainer>
+
+      {/* Pagination Controls */}
+      {sortedData.length > 0 && (
+        <Box sx={{ p: 2, borderTop: '1px solid #e0e0e0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="caption" color="textSecondary">
+            Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, sortedData.length)} of {sortedData.length} records
+          </Typography>
+          
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Typography variant="caption" color="textSecondary">
+                Items per page:
+              </Typography>
+              <Select
+                size="small"
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                sx={{ width: 80 }}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+                <MenuItem value={60}>60</MenuItem>
+              </Select>
+            </Stack>
+            
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                startIcon={<ChevronLeft size={18} />}
+              >
+                Previous
+              </Button>
+              
+              <Typography variant="body2" sx={{ minWidth: 40, textAlign: 'center' }}>
+                {currentPage} / {totalPages}
+              </Typography>
+              
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                endIcon={<ChevronRight size={18} />}
+              >
+                Next
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
+      )}
     </Paper>
   );
 };

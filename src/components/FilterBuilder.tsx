@@ -36,7 +36,11 @@ export const FilterBuilder: React.FC<FilterBuilderProps> = ({
     return FilterValidator.validateAllConditions(filterState.conditions);
   }, [filterState.conditions]);
 
-  const hasErrors = validationErrors.size > 0;
+  // Only show errors if there are validation errors for conditions that have a field selected
+  // This avoids showing errors for empty conditions the user just added but hasn't filled in yet
+  const hasErrors = filterState.conditions.some(condition => {
+    return condition.field !== '' && validationErrors.has(condition.id);
+  });
 
   // When filters change, we wait 150ms before actually updating the parent component.
   // This reduces noise if the user is rapidly typing or clicking. For example, if they

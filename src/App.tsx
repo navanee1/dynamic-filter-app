@@ -83,7 +83,7 @@ function App() {
   return (
     <Box sx={{ backgroundColor: '#f0f2f5', minHeight: '100vh', py: 6, display: 'flex', justifyContent: 'center', width: '100%' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1400px', px: 3, margin: '0 auto' }}>
-        {/* Header - Centered and Professional */}
+       
         <Paper elevation={3} sx={{ mb: 5, p: 4, backgroundColor: '#fff', borderRadius: 2, textAlign: 'center' }}>
           <Typography
             variant="h3"
@@ -103,7 +103,7 @@ function App() {
             color="textSecondary"
             sx={{ fontSize: '1.1rem', maxWidth: '800px', mx: 'auto' }}
           >
-            Professional data filtering with support for multiple data types and operators
+            Data filtering with support for multiple data types and operators
           </Typography>
         </Paper>
 
@@ -158,7 +158,7 @@ function App() {
         {/* Footer */}
         <Box sx={{ mt: 8, pt: 4, borderTop: '2px solid #e0e0e0', textAlign: 'center' }}>
           <Typography variant="body2" color="textSecondary" sx={{ fontStyle: 'italic' }}>
-            © 2024 Frontend Developer Assessment - Dynamic Filter Component System
+            © Frontend Developer Assessment - Dynamic Filter Component System
           </Typography>
           <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1 }}>
             Built with React 18, TypeScript, Material-UI, and Vite
